@@ -26,6 +26,10 @@ export const metadata: Metadata = {
     description: site.quote,
     type: "website",
   },
+  icons: {
+    icon: [{ url: "/bloomcraftco_circular_icon.svg", type: "image/svg+xml" }],
+    apple: "/bloomcraftco_circular_icon.svg",
+  },
 };
 
 export const viewport: Viewport = {
