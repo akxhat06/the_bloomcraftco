@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Bloomcraft Co. — `bloomcraftco`
 
-## Getting Started
+Marketing site for [The Bloomcraft Co.](https://www.instagram.com/the_bloomcraftco/) (@the_bloomcraftco): hero, about, product categories, an Instagram-style media reel, and order call-to-action. Copy lives in `content/site.ts`, and gallery assets are read automatically from the filesystem.
 
-First, run the development server:
+## Stack
+
+- **Next.js** 16 (App Router) · **React** 19 · **TypeScript**
+- **Tailwind CSS** 4
+- **Fonts:** DM Sans & Fraunces (Google) via `next/font`
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). The home page revalidates every 60 seconds so new files under `public/media/` can appear without a full redeploy in production (see `export const revalidate` in `app/page.tsx`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command      | Description              |
+| ------------ | ------------------------ |
+| `npm run dev`   | Local dev (Turbopack)   |
+| `npm run build` | Production build        |
+| `npm run start` | Run production build    |
+| `npm run lint`  | ESLint (Next.js config) |
 
-## Learn More
+## Media gallery
 
-To learn more about Next.js, take a look at the following resources:
+There is no Instagram API. Images and short videos are combined into one ordered list from **`public/media/`** only. Supported types and naming are defined in `lib/public-media.ts`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Images:** e.g. `.jpg`, `.png`, `.webp`, `.avif`, `.svg`
+- **Video posters (optional):** for `my-reel.mp4`, add a matching `my-reel-poster.jpg` (or `.jpeg` / `.png` / `.webp`) so the reel can show a still before playback.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Configuration
 
-## Deploy on Vercel
+- **Site copy, links, tagline:** `content/site.ts`
+- **Styling / theme tokens:** `app/globals.css`
+- **Environment:** copy `.env.example` to `.env.local` for local overrides (no secrets are required for the public marketing site as shipped).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project layout (high level)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/           App Router: layout, page, global styles
+components/    UI: Header, Hero, MediaShowcase, ReelStage, etc.
+content/       Central marketing copy
+lib/           public-media listing helpers
+public/media/  Add images and videos here
+```
+
+## Deploy
+
+Deploy on [Vercel](https://vercel.com) or any host that runs Node for Next.js. Set environment variables in the host dashboard if you add any in production.
+
+## License
+
+Private project; all rights reserved unless otherwise noted by the owner.
