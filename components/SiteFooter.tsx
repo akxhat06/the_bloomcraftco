@@ -3,8 +3,8 @@ import { site } from "@/content/site";
 export function SiteFooter() {
   const year = new Date().getFullYear();
   return (
-    <footer className="mt-auto border-t border-stone-200/80 bg-stone-50 py-10">
-      <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-5 text-center sm:flex-row sm:px-6 sm:text-left">
+    <footer className="mt-auto border-t border-stone-200/80 bg-stone-50 py-8 pb-[max(2.5rem,env(safe-area-inset-bottom,0px))] sm:py-10">
+      <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-3 text-center min-[400px]:px-5 sm:flex-row sm:px-6 sm:text-left">
         <div>
           <p className="font-serif text-stone-900">{site.name}</p>
           <p className="text-sm text-stone-500">© {year} {site.name}. All rights reserved.</p>

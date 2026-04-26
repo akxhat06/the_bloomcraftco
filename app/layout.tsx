@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DM_Sans, Fraunces } from "next/font/google";
 import "./globals.css";
 import { site } from "@/content/site";
@@ -28,6 +28,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -38,7 +45,9 @@ export default function RootLayout({
       lang="en"
       className={`${dmSans.variable} ${fraunces.variable} h-full scroll-smooth antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans text-stone-800">{children}</body>
+      <body className="min-h-full flex flex-col font-sans text-stone-800 pb-[env(safe-area-inset-bottom,0px)]">
+        {children}
+      </body>
     </html>
   );
 }

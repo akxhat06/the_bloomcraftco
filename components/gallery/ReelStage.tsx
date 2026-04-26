@@ -12,11 +12,19 @@ type Props = { slides: readonly MediaSlide[] };
  */
 const IMAGE_SLIDE_MS = 6500;
 
-/** Center reel — dominant size. */
-const reelFrame = "h-[min(86svh,800px)] w-auto [aspect-ratio:9/16] max-w-[min(100%,420px)]";
-/** Side peeks: same aspect, slightly smaller so the stack reads clearly. */
+/**
+ * Center reel — 9:16, shorter on small screens so controls + page chrome fit comfortably.
+ * `dvh` tracks mobile browser UI better than `svh`.
+ */
+/**
+ * Use `vh` (not just `dvh`) so height always resolves; `dvh` can be invalid in
+ * some WebViews, leaving the box at height:0 when children are all `absolute`.
+ * Optional `dvh` line can be added in pure CSS with @supports for progressive enhancement.
+ */
+const reelFrame =
+  "h-[min(70vh,720px)] w-auto [aspect-ratio:9/16] max-w-[min(100%,420px)] min-[480px]:h-[min(80vh,800px)] sm:h-[min(86vh,800px)]";
 const reelFrameSide =
-  "h-[min(78svh,700px)] w-auto [aspect-ratio:9/16] max-w-[min(100%,360px)]";
+  "h-[min(64vh,650px)] w-auto [aspect-ratio:9/16] max-w-[min(100%,360px)] min-[480px]:h-[min(74vh,720px)] sm:h-[min(78vh,700px)]";
 
 function SidePeek({
   slide,
@@ -201,7 +209,7 @@ function ReelVideo({
               return next;
             });
           }}
-          className="absolute bottom-10 right-2 z-10 rounded-full border border-amber-200/70 bg-white/80 px-2.5 py-1.5 text-[10px] font-medium uppercase tracking-wide text-stone-700 shadow-sm backdrop-blur-sm sm:bottom-3 sm:right-3 sm:text-[11px] sm:normal-case"
+          className="absolute right-2 z-10 min-h-9 touch-manipulation rounded-full border border-amber-200/70 bg-white/90 px-2.5 py-2 text-[10px] font-medium uppercase tracking-wide text-stone-700 shadow-sm backdrop-blur-sm max-sm:bottom-[max(2.5rem,env(safe-area-inset-bottom,0.25rem))] sm:bottom-3 sm:right-3 sm:py-1.5 sm:text-[11px] sm:normal-case"
         >
           {muted ? "Tap for sound" : "Mute"}
         </button>
@@ -222,7 +230,7 @@ function PlayIcon({ className }: { className?: string }) {
 function ReelLikedHeart() {
   return (
     <div
-      className="pointer-events-none absolute right-2.5 bottom-20 z-[4] sm:bottom-16 sm:right-3"
+      className="pointer-events-none absolute right-2.5 z-[4] sm:bottom-16 sm:right-3 max-sm:bottom-[max(5.5rem,calc(2rem+env(safe-area-inset-bottom,0px)))]"
       role="img"
       aria-label="Liked"
     >
@@ -329,7 +337,7 @@ export function ReelStage({ slides }: Props) {
 
   return (
     <div
-      className="relative overflow-hidden rounded-[2rem] border border-amber-200/80 bg-gradient-to-b from-amber-50/95 via-white to-rose-50/50 p-3 shadow-lg shadow-amber-900/10 ring-1 ring-amber-100/80 sm:p-6"
+      className="relative overflow-hidden rounded-2xl border border-amber-200/80 bg-gradient-to-b from-amber-50/95 via-white to-rose-50/50 p-2 shadow-lg shadow-amber-900/10 ring-1 ring-amber-100/80 min-[400px]:p-3 sm:rounded-[2rem] sm:p-6"
       onTouchStart={(e) => {
         touchStartX.current = e.touches[0]?.clientX ?? null;
       }}
@@ -355,40 +363,40 @@ export function ReelStage({ slides }: Props) {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_55%_at_50%_0%,rgba(251,191,36,0.14),transparent_55%)]"
         aria-hidden
       />
-      <div className="relative mx-auto w-full max-w-6xl overflow-x-clip px-1 sm:px-2">
-        <div className="flex min-h-0 items-center justify-center">
+      <div className="relative mx-auto w-full max-w-6xl overflow-x-clip px-0 min-[400px]:px-1 sm:px-2">
+        <div className="flex min-h-0 min-w-0 items-start justify-center max-sm:gap-0 sm:items-center">
           {n > 1 && prev ? (
-            <div className="relative z-[3] hidden shrink-0 sm:-mr-[16%] sm:block md:-mr-[20%] lg:-mr-[22%]">
+            <div className="relative z-[3] hidden w-auto shrink-0 origin-center -mr-[16%] sm:block md:-mr-[20%] lg:-mr-[22%]">
               <SidePeek slide={prev} align="left" onSelect={() => go(-1)} />
             </div>
           ) : null}
-          <div className="relative z-20 mx-auto w-full min-w-0 max-w-[min(100%,420px)] shrink">
-            {n > 1 ? (
-              <>
-                <button
-                  type="button"
-                  onClick={() => go(-1)}
-                  className="absolute left-1 top-1/2 z-30 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-amber-200/80 bg-white/90 text-lg text-stone-700 shadow-sm backdrop-blur-sm transition hover:bg-amber-50 sm:hidden"
-                  aria-label="Previous"
-                >
-                  ‹
-                </button>
-                <button
-                  type="button"
-                  onClick={() => go(1)}
-                  className="absolute right-1 top-1/2 z-30 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-amber-200/80 bg-white/90 text-lg text-stone-700 shadow-sm backdrop-blur-sm transition hover:bg-amber-50 sm:hidden"
-                  aria-label="Next"
-                >
-                  ›
-                </button>
-              </>
-            ) : null}
+          <div className="relative z-20 mx-auto w-full min-w-0 max-w-[min(19rem,92vw)] shrink sm:max-w-[min(100%,420px)]">
             <div
-              className={`relative overflow-hidden rounded-[1.4rem] bg-amber-50/50 shadow-[0_24px_50px_-8px_rgba(90,50,20,0.22)] ring-2 ring-amber-200/90 ${reelFrame} mx-auto`}
+              className={`relative z-0 overflow-hidden rounded-2xl bg-amber-50/50 shadow-[0_20px_40px_-8px_rgba(90,50,20,0.2)] ring-2 ring-amber-200/90 min-h-[200px] min-[400px]:rounded-[1.35rem] sm:min-h-0 sm:rounded-[1.4rem] sm:shadow-[0_24px_50px_-8px_rgba(90,50,20,0.22)] ${reelFrame} mx-auto w-full max-w-full`}
             >
+              {n > 1 ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => go(-1)}
+                    className="absolute left-1.5 top-1/2 z-30 flex h-9 w-9 -translate-y-1/2 touch-manipulation items-center justify-center rounded-full border border-amber-200/90 bg-white/95 text-lg leading-none text-stone-700 shadow-md sm:hidden"
+                    aria-label="Previous"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => go(1)}
+                    className="absolute right-1.5 top-1/2 z-30 flex h-9 w-9 -translate-y-1/2 touch-manipulation items-center justify-center rounded-full border border-amber-200/90 bg-white/95 text-lg leading-none text-stone-700 shadow-md sm:hidden"
+                    aria-label="Next"
+                  >
+                    ›
+                  </button>
+                </>
+              ) : null}
               <div
                 key={activeSlide.src + activeSlide.kind}
-                className="absolute inset-0 reel-main-swap-anim"
+                className="absolute inset-0 z-[2] min-h-0 reel-main-swap-anim"
               >
                 <div className="relative h-full min-h-0 w-full">
                   <MainFrame
@@ -398,30 +406,34 @@ export function ReelStage({ slides }: Props) {
                   />
                 </div>
               </div>
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-2/5 bg-gradient-to-t from-amber-950/35 via-amber-950/10 to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-2/5 bg-gradient-to-t from-amber-950/35 via-amber-950/10 to-transparent" />
               <ReelLikedHeart />
             </div>
           </div>
           {n > 1 && nextSlide ? (
-            <div className="relative z-[3] hidden shrink-0 sm:-ml-[16%] sm:block md:-ml-[20%] lg:-ml-[22%]">
+            <div className="relative z-[3] hidden w-auto shrink-0 origin-center -ml-[16%] sm:block md:-ml-[20%] lg:-ml-[22%]">
               <SidePeek slide={nextSlide} align="right" onSelect={() => go(1)} />
             </div>
           ) : null}
         </div>
       </div>
 
-      <div className="relative mt-4 flex items-center justify-center gap-1.5">
+      <div className="relative mt-3 flex w-full max-w-full flex-wrap items-center justify-center gap-0.5 px-1 sm:mt-4 sm:gap-1.5 sm:px-0">
         {slides.map((s, i) => (
           <button
             key={s.src + s.kind + i}
             type="button"
             onClick={() => setActive(i)}
-            className={`h-1.5 rounded-full transition-all ${
-              i === active ? "w-6 bg-amber-500" : "w-1.5 bg-amber-300/80 hover:bg-amber-400"
-            }`}
+            className="flex h-9 min-w-7 touch-manipulation items-center justify-center sm:h-auto sm:min-w-0 sm:p-0"
             aria-label={`Slide ${i + 1} of ${n}`}
             aria-pressed={i === active}
-          />
+          >
+            <span
+              className={`block h-1.5 rounded-full transition-all ${
+                i === active ? "w-6 bg-amber-500" : "w-1.5 bg-amber-300/80 active:bg-amber-400 sm:hover:bg-amber-400"
+              }`}
+            />
+          </button>
         ))}
       </div>
     </div>

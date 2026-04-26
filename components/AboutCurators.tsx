@@ -2,8 +2,8 @@ import { site } from "@/content/site";
 
 export function AboutCurators() {
   return (
-    <section className="border-b border-stone-200/80 bg-white/50 py-16 sm:py-20">
-      <div className="mx-auto max-w-5xl px-5 sm:px-6">
+    <section className="border-b border-stone-200/80 bg-white/50 py-12 sm:py-20">
+      <div className="mx-auto max-w-5xl px-3 min-[400px]:px-5 sm:px-6">
         <h2 className="font-serif text-2xl font-medium text-stone-900 sm:text-3xl">
           About the studio
         </h2>
